@@ -5,10 +5,10 @@ project:
 
 # If using an HDL, set wokwi_id as 0 and uncomment and list your source files here. 
 # Source files must be in ./src and you must list each source file separately
-#  source_files:        
-#    - counter.v
-#    - decoder.v
-#  top_module:  "tt_um_example"      # Put the name of your top module here, must start with "tt_um_". Make it unique by including your github username
+ source_files:        
+   - project.sv
+ top_module:  "tt_um_tiny_game_of_life"      # Put the name of your top module here, must start with "tt_um_". Make it unique by including your github username
+
 
 # How many tiles your design occupies? A single tile is about 167x108 uM.
   tiles: "1x1"    # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2 or 8x2
@@ -21,18 +21,23 @@ yaml_version: 4
 #
 # Here is a great example: https://github.com/davidsiaw/tt02-davidsiaw-stackcalc/blob/38c5647f83aad2aec675d566aa3d67b98f0aac81/info.yaml
 documentation: 
-  author:       ""      # Your name
-  title:        ""      # Project title
-  language:     "Wokwi" # other examples include Verilog, Amaranth, VHDL, etc
-  description:  ""      # Short description of what your project does
+  author:       "Petros Emmanouilidis"      # Your name
+  title:        "Tiny Game of Life"      # Project title
+  language:     "Verilog" # other examples include Verilog, Amaranth, VHDL, etc
+  description:  "Simulates cellular automaton Conway's Game of Life on a 5x5 grid using shift registers."      # Short description of what your project does
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
-      Explain how your project works
+      Simulation operates on 3 distinct states: INPUT, UPDATE, and OUTPUT. 
+      INPUT: The values of the grid are loaded into the circuit, 1 cell at a time. Cells are organized in row-major order. The user must indicate a transition from INPUT to UPDATE through a special input combination. The circuit can hold a total of 25 values at a time; after that, the oldest values are pushed out of the grid
+      UPDATE: 
+      
+      The design uses a 2-bit input, a 3-bit output, a clock, and a reset line. 
+      Input line 0 holds the bit that will be stored in the table in the next clock cycle. Input line 1 is used for shifting from INPUT to UPDATE. A 0 indicates staying at INPUT, and a 1 indicates switching to UPDATE. The value of Input 0 when Input 1 is asserted is not stored in the table
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
-      Explain how to test your project
+      Pray it works.
 
 # A description of what the inputs do (e.g. red button, SPI CLK, SPI MOSI, etc).
   inputs:               
@@ -68,7 +73,7 @@ documentation:
 # The following fields are optional
   tag:          ""      # comma separated list of tags: test, encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
   external_hw:  ""      # Describe any external hardware needed
-  discord:      ""      # Your discord handle, used for communication and automatically assigning tapeout role after a submission
+  discord:      "petrosem"      # Your discord handle, used for communication and automatically assigning tapeout role after a submission
   doc_link:     ""      # URL to longer form documentation, eg the README.md in your repository
   clock_hz:     0       # Clock frequency in Hz (if required)
   picture:      ""      # relative path to a picture in your repository (must be 512kb or less)
