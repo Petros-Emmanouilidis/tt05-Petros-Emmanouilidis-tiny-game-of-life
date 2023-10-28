@@ -12,6 +12,11 @@ module tt_um_tiny_game_of_life (
 );
 
     FSM Petros_Game_of_Life(.in(ui_in[1:0]), .out(uo_out[2:0]), .clock(ui_in[2]), .reset(ui_in[3]));
+    assign ui_in[7:4] = '0;
+    assign uo_out[7:3] = '0;
+    assign uio_in[7:0] = '0;
+    assign uio_out[7:0] = '0;
+    assign uio_oe[7:0] = '0;
     
 endmodule: tt_um_tiny_game_of_life
 
