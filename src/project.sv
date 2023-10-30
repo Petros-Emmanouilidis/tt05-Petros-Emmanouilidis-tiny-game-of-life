@@ -12,7 +12,7 @@ module tt_um_tiny_game_of_life (
 );
 
     logic reset;
-    FSM Petros_Game_of_Life(.in(ui_in[1:0]), .out(uo_out[2:0]), .clock(ui_in[2]), .*);
+    FSM Petros_Game_of_Life(.in(ui_in[1:0]), .out(uo_out[2:0]), .clock(clk), .*);
     assign reset = ~rst_n;
     assign uo_out[7:3] = '0;
     assign uio_out[7:0] = '0;
