@@ -74,7 +74,7 @@ endmodule: FSM
 
 
 module shiftRegister
-    #(parameter N = 36, n = 6)
+    #(parameter N = 64, n = 8)
         (input  logic in, reset, clock,
          input  logic [1:0] state,
          output logic out);
@@ -267,7 +267,7 @@ endmodule: conway_adder_edge
 // Counter used for loading bits from update table to load table
 
 module counter
-    #(parameter N = 36)
+    #(parameter N = 64)
     (input  logic clock, clear,
      output logic eqToMax);
 
