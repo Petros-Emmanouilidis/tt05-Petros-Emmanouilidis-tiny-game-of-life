@@ -12,24 +12,27 @@ module tt_um_tiny_game_of_life (
 );
 
     logic reset;
-    FSM Petros_Game_of_Life(.in(ui_in[1:0]), .out(uo_out[2:0]), .clock(clk), .*);
+    FSM Petros_Game_of_Life(.in(ui_in[1:0]), .out(uo_out[7:0]), .clock(clk), .*);
     assign reset = ~rst_n;
-    assign uo_out[7:3] = '0;
     assign uio_out[7:0] = '0;
     assign uio_oe[7:0] = '0;
+
+    logic [63:0] uTable_d, lTable_d;
     
 endmodule: tt_um_tiny_game_of_life
 
 module FSM
     (input  logic [1:0] in,
      input  logic clock, reset,
-     output logic [2:0] out);
+     output logic [7:0] out,
+     output logic [63:0] uTable_d, lTable_d);
 
     
     enum logic [1:0] {INPUT = 2'b00, UPDATE = 2'b01, OUTPUT = 2'b10} currState, nextState;
     
     // Counter module instantiation
     logic counter_out, counter_clear;
+    logic [6:0] Q;
     counter cntr(.clear(counter_clear), .eqToMax(counter_out), .*);
 
     // Shift register instantiation
@@ -61,7 +64,7 @@ module FSM
 
     // Output combinational logic
     always_comb begin
-        out[2:1] = currState;
+        out[7:1] = Q;
         out[0] = shift_out;
     end
 
@@ -77,7 +80,8 @@ module shiftRegister
     #(parameter N = 64, n = 8)
         (input  logic in, reset, clock,
          input  logic [1:0] state,
-         output logic out);
+         output logic out,
+         output logic [N-1:0] uTable_d, lTable_d);
 
     genvar i;
 
@@ -165,6 +169,9 @@ module shiftRegister
     endgenerate  
 
     assign out = lw1[1];
+
+    assign lTable_d = lw1[N:1];
+    assign uTable_d = lw2[N:1];
 
 endmodule: shiftRegister
 
@@ -269,14 +276,14 @@ endmodule: conway_adder_edge
 module counter
     #(parameter N = 64)
     (input  logic clock, clear,
-     output logic eqToMax);
+     output logic eqToMax,
+     output logic [6:0] Q);
 
-    logic [$clog2(N)-1:0] count;
     always_ff @(posedge clock) begin
-        if (clear) count <= '0;
-        else count <= count + 1;
+        if (clear) Q <= '0;
+        else Q <= Q + 1;
 
-        if (count >= N-1) eqToMax <= 1'b1;
+        if (Q >= 7'd63) eqToMax <= 1'b1;
         else eqToMax <= 1'b0;
     end
 endmodule: counter
