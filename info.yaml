@@ -24,13 +24,17 @@ documentation:
   author:       "Petros Emmanouilidis"      # Your name
   title:        "Tiny Game of Life"      # Project title
   language:     "Verilog" # other examples include Verilog, Amaranth, VHDL, etc
-  description:  "Simulates cellular automaton Conway's Game of Life on a 8x8 grid using shift registers."      # Short description of what your project does
+  description:  "Simulates cellular automaton Conway's Game of Life on an 8x8 grid using shift registers."      # Short description of what your project does
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
 
-      The design uses to shift registers to play the game: a load register and an update register. 
-      After the entire grid is sequentially loaded in, the circuit plays the game indefinitely, outputting the state of each cell sequentially in the process. 
+      The circuit employs 2 distinct shift registers to run the simulation: A Load Shift Register stores the initial state of the grid based on the user's input. 
+      Once the simulation commences, all cells in the Load Shift Register are updated and copied in parallel inside the Update Shift Register. This update step 
+      occurs within a single clock cycle. After updating the grid, the circuit outputs each new value sequentially before proceeding to the next state of the game.
+      The output stage of the game lasts 64 clock cycles (one clock cycle for each cell in the grid) and involves pushing the updated cells from the Update Shift Register
+      back to the Load Shift Register. Once all updated values have trickled into the Load Shift Register, the circuit returns to its update phase, restarting the cycle of 
+      update and output. After the simulation commences, the circuit will oscillate between updating and outputting indefinitely (unless reset) without any further user input.
       
       Simulation operates on 3 distinct states: INPUT, UPDATE, and OUTPUT. 
       INPUT: The values of the grid are loaded into the circuit, 1 cell at a time. Cells are organized in row-major order. The user must indicate a transition from INPUT to UPDATE through a special input combination. The circuit can hold a total of 64 values at a time; after that, the oldest values are pushed out of the grid
